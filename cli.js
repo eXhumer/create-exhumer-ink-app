@@ -15,7 +15,7 @@ const cli = meow(
 	Examples
 		$ create-ink-app my-cli
 		$ create-ink-app .
-`,
+	`,
 	{
 		importMeta: import.meta,
 		flags: {
@@ -32,7 +32,7 @@ try {
 	console.log();
 	await createInkApp(projectDirectoryPath, cli.flags);
 
-	const pkgName = path.basename(projectDirectoryPath);
+	const packageName = path.basename(projectDirectoryPath);
 	const relativePath = path.relative(process.cwd(), projectDirectoryPath);
 
 	console.log(
@@ -48,7 +48,7 @@ try {
 			'  $ npm run dev',
 			'',
 			'Run:',
-			`  $ ${pkgName}`,
+			`  $ ${packageName}`,
 			'',
 		]
 			.filter(line => line !== undefined)

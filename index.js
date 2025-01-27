@@ -2,15 +2,21 @@ import process from 'node:process';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import makeDir from 'make-dir';
 import replaceString from 'replace-string';
 import slugify from 'slugify';
 import {execa} from 'execa';
 import Listr from 'listr';
 
-const copyWithTemplate = async (from, to, variables) => {
+const copyWithTemplate = async (
+	/** @type {string} */
+	from,
+	/** @type {string} */
+	to,
+	/** @type {{name: (string | undefined)} | undefined} */
+	variables,
+) => {
 	const dirname = path.dirname(to);
-	await makeDir(dirname);
+	await fs.mkdir(dirname, {recursive: true});
 
 	const source = await fs.readFile(from, 'utf8');
 	let generatedSource = source;
@@ -23,13 +29,15 @@ const copyWithTemplate = async (from, to, variables) => {
 };
 
 const createInkApp = (
+	/** @type {string} */
 	projectDirectoryPath = process.cwd(),
+	/** @type {{typescript: (boolean | undefined), silent: (boolean | undefined)}} */
 	{typescript, silent},
 ) => {
-	const pkgName = slugify(path.basename(projectDirectoryPath));
+	const packageName = slugify(path.basename(projectDirectoryPath));
 
-	const execaInDirectory = (file, args, options = {}) =>
-		execa(file, args, {
+	const execaInDirectory = (file, arguments_, options = {}) =>
+		execa(file, arguments_, {
 			...options,
 			cwd: projectDirectoryPath,
 		});
@@ -48,7 +56,7 @@ const createInkApp = (
 				title: 'Copy files',
 				task() {
 					const variables = {
-						name: pkgName,
+						name: packageName,
 					};
 
 					return new Listr([
@@ -92,7 +100,9 @@ const createInkApp = (
 							title: 'JavaScript files',
 							enabled: () => !typescript,
 							async task() {
-								await makeDir(toPath(projectDirectoryPath, 'source'));
+								await fs.mkdir(toPath(projectDirectoryPath, 'source'), {
+									recursive: true,
+								});
 
 								await fs.copyFile(
 									fromPath('source/app.js'),
@@ -115,7 +125,9 @@ const createInkApp = (
 							title: 'TypeScript files',
 							enabled: () => typescript,
 							async task() {
-								await makeDir(toPath(projectDirectoryPath, 'source'));
+								await fs.mkdir(toPath(projectDirectoryPath, 'source'), {
+									recursive: true,
+								});
 
 								await fs.copyFile(
 									fromPath('source/app.tsx'),
@@ -150,14 +162,14 @@ const createInkApp = (
 			},
 			{
 				title: 'Format code',
-				task() {
-					return execaInDirectory('npx', ['prettier', '--write', '.']);
+				async task() {
+					await execaInDirectory('npx', ['prettier', '--write', '.']);
 				},
 			},
 			{
 				title: 'Build',
-				task() {
-					return execaInDirectory('npm', ['run', 'build']);
+				async task() {
+					await execaInDirectory('npm', ['run', 'build']);
 				},
 			},
 			{

@@ -1,18 +1,28 @@
 {
-	"name": "create-ink-app",
-	"version": "3.0.2",
+	"name": "create-exhumer-ink-app",
+	"version": "4.0.0",
 	"description": "Generate a starter Ink app",
 	"license": "MIT",
-	"repository": "vadimdemedes/create-ink-app",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eXhumer/create-exhumer-ink-app.git"
+	},
 	"author": {
 		"name": "Vadim Demedes",
 		"email": "vadimdemedes@hey.com",
-		"url": "vadimdemedes.com"
+		"url": "https://vadimdemedes.com"
 	},
+	"maintainers": [
+		{
+			"name": "eXhumer",
+			"email": "exhumer@exhumer.cc",
+			"url": "https://github.com/eXhumer"
+		}
+	],
 	"bin": "cli.js",
 	"type": "module",
 	"engines": {
-		"node": ">=16"
+		"node": ">=20"
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -30,22 +40,19 @@
 		"cli"
 	],
 	"dependencies": {
-		"cpy": "^9.0.1",
-		"execa": "^7.1.1",
+		"execa": "^9.5.2",
 		"listr": "^0.14.3",
-		"make-dir": "^3.1.0",
-		"meow": "^11.0.0",
+		"meow": "^13.2.0",
 		"replace-string": "^4.0.0",
 		"slugify": "^1.6.6"
 	},
 	"devDependencies": {
 		"@vdemedes/prettier-config": "^2.0.1",
-		"ava": "^5.2.0",
-		"del": "^7.0.0",
-		"prettier": "^2.8.7",
-		"strip-ansi": "^7.0.1",
-		"tempy": "^3.0.0",
-		"xo": "^0.53.1"
+		"ava": "^6.2.0",
+		"prettier": "^3.4.2",
+		"strip-ansi": "^7.1.0",
+		"tempy": "^3.1.0",
+		"xo": "^0.60.0"
 	},
 	"ava": {
 		"timeout": "5m"
